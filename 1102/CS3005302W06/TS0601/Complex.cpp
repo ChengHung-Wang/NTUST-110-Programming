@@ -1,3 +1,8 @@
+#include <iostream>
+#include <math.h>
+#include <string>
+#include <sstream>
+#include <vector>
 #include "Complex.h"
 
 Complex::Complex() {
@@ -100,10 +105,37 @@ bool operator==(Complex c1, Complex c2) {
 }
 
 ostream& operator<<(ostream& strm, const Complex& c) {
-
+	// “realValue + imaginaryValue*i"
+	strm << c.realValue << " + " << c.imaginaryValue << "*i" << endl;
+	return strm;
 }
 istream& operator>>(istream& strm, Complex& c) {
-
+	string input;
+	strm >> input;
+	istringstream iss(input);
+	vector<double> lists;
+	vector<char> authList = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-', '*', 'i'};
+	string buffer;
+	while (iss >> buffer) {
+		bool auth = true;
+		string thisNum = "";
+		for (int index = buffer.length() - 1; index <= 0; index ++) {
+			if (find(authList.begin(), authList.end(), buffer[index]) == authList.end()) {
+				auth = false;
+			}else if (buffer[index] != '*' || buffer[index] != 'i') {
+				thisNum = thisNum + buffer[index];
+			}
+		}
+		cout << thisNum << endl;
+		if (auth) {
+			
+			lists.push_back(stod(thisNum));
+		}
+	}
+	
+	if (lists.size() >= 2) {
+		c.realValue = lists[0];
+		c.imaginaryValue = lists[1];
+	}
+	return strm;
 }
-
-Complex::~Complex() {}
