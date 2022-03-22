@@ -1,0 +1,13 @@
+#include <stdio.h>
+
+int main()
+{
+    int a, b;
+    char method;
+    scanf_s("%d", &a);
+    scanf_s("%s", &method, 1);
+    scanf_s("%d", &b);
+
+    printf("%d %s %d", a, &method[0], b);
+    return 0;
+}
