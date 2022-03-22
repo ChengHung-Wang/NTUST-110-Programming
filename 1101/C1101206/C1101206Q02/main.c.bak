@@ -1,0 +1,240 @@
+#pragma warning(disable : 4996)
+#pragma warning(disable : 6031)
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define STACK_CHUNK 32
+
+char *ask(const char *prompt) {
+	char c, *input;
+	input = (char *)malloc(sizeof(*input));  // allocate 1 byte
+
+	fputs(prompt, stdout);  // display the prompt
+
+	// get a char `c`, check `c` is nither EOF nor '\n'
+	size_t index = 0;
+	while ((c = getchar()) != EOF && c != '\n') {
+		input = (char *)realloc(input, index + 1);
+		input[index++] = c;
+	}
+	input[index] = '\0';  // end the string with '\0'
+
+	return input;
+}
+
+typedef struct {
+	size_t top;
+	size_t size;
+	size_t capacity;
+	char *elements;
+} stack_t;
+
+// stack_t *stack_new() {
+// 	stack_t *s = malloc(sizeof(stack_t));
+// 	s->top = 0;
+// 	s->size = 0;
+// 	s->capacity = STACK_CHUNK;
+// 	s->elements = calloc(s->capacity, sizeof(*(s->elements)));
+// 	return s;
+// }
+
+stack_t * stack_new()
+{
+    stack_t *s = malloc(sizeof(stack_t));
+    if (!s)
+        return s;
+
+    s->size = 0;
+    s->capacity = 32;
+    s->top = 0;
+    s->elements = malloc(s->capacity);
+    if (!(s->elements)) {
+        stack_delete(s);
+        s = NULL;
+        return s;
+    }
+
+    return s;
+}
+
+void stack_delete(stack_t *self)
+{
+    if (!self) {
+        return;
+    }
+
+    char *elements = self->elements;
+    if (elements)
+        free(elements);
+    
+    free(self);
+}
+
+bool stack_is_empty(stack_t *self)
+{
+    assert(self);
+    return self->size == 0;
+}
+
+int stack_peek(stack_t *self)
+{
+    assert(!stack_is_empty(self));
+    return self->elements[self->top];
+}
+
+static bool stack_expand(stack_t *self)
+{
+    if (self->size < self->capacity) {
+        return true;
+    }
+
+    int *old_arr = self->elements;
+    self->capacity = self->size * 2;
+    int *new_arr = malloc(self->capacity);
+    if (!new_arr) {
+        return false;
+    }
+
+    size_t sz = 0;
+    int i = self->top;
+    int j = self->top;
+    while (sz < self->capacity) {
+        new_arr[i] = old_arr[j];
+
+        i = i == 0 ? self->capacity - 1 : i - 1;
+        j = j == 0 ? self->size - 1 : j - 1;
+        sz++;
+    }
+
+    self->elements = new_arr;
+    free(old_arr);
+
+    return true;
+}
+
+// void stack_push(stack_t *self, char element) {
+// 	if (self->top == self->capacity) {
+// 		self->capacity += STACK_CHUNK;
+// 		self->elements = realloc(self->elements, sizeof(*self->elements) * self->capacity);
+// 	}
+// 	if (self->size > 0) {self->top++;}
+// 	self->size++;
+// 	self->elements[self->top] = element;
+// }
+
+bool stack_push(stack_t *self, int data)
+{
+    if (!stack_expand(self))
+        return false;
+
+    if (stack_size(self) > 0)
+        self->top = (self->top + 1) % self->capacity;
+
+    self->elements[self->top] = data;
+    self->size++;
+
+    return true;
+}
+
+// char stack_pop(stack_t *self) {
+// 	char popped = self->elements[self->top];
+// 	self->size--;
+// 	if (self->top > 0) {
+// 		self->top--;
+// 		return popped;
+// 	}
+// 	return EOF;
+// }
+
+int stack_pop(stack_t *self)
+{
+    assert(!stack_is_empty(self));
+
+    int popped = self->elements[self->top];
+
+    self->top = self->top == 0 ? self->capacity - 1 : self->top - 1;
+    self->size--;
+
+    return popped;
+}
+
+/*
+	Infix: ((1+2)*3)/4+5
+	Postfix : 12+3*4/5 +
+
+	((1 + 2) * 3) / 4 + 5
+	12 + 3 * 4 / 5 +
+
+	(1 + 2) * (99 + 400) / (12��672)
+	12 + 99400 + *12672 + /
+
+	72 + 63 * (42 + 99) + 7 / 2 - 4 * (22 + 5)
+	72634299 + *+72 / +4225 + *-
+*/
+
+bool is_operator(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
+
+int precedence(char operator) {
+	switch (operator) {
+		case '*':
+		case '/':
+			return 2;
+		case '+':
+		case '-':
+			return 1;
+		default:
+			return 0;
+	}
+}
+
+char *infix_to_postfix(char *original) {
+	char *infix_start = malloc((strlen(original) + 3));  // 3 for '(', ')' and '\0'
+	sprintf(infix_start, "(%s)", original);
+	char *postfix = calloc(strlen(original) + 1, sizeof(*original));  // same as original is long enough
+	size_t postfix_index = 0;
+
+	stack_t stack = *stack_new();
+	for (char *infix = infix_start; *infix != '\0'; infix++) {
+		if (*infix == '(') {
+			stack_push(&stack, *infix); // stack.push(*infix) in OOP languages
+
+		} else if (isdigit(*infix)) {
+			// char *old = infix;
+			// long n = strtol(old, &infix, 10);
+			// sprintf(postfix + (infix - old), "%d", n);
+			postfix[postfix_index++] = *infix;
+
+		} else if (is_operator(*infix)) {
+			// pop all higher precedence operators
+			char popped = stack_pop(&stack);
+			while (is_operator(popped)
+			       && precedence(popped) >= precedence(*infix)) {
+				postfix[postfix_index++] = popped;
+				popped = stack_pop(&stack);
+			}
+
+		} else if (*infix == ')') {
+			// pop until '('
+			char popped = stack_pop(&stack);
+			while (popped != '(') {
+				postfix[postfix_index++] = popped;
+				popped = stack_pop(&stack);
+			}
+
+		} else {
+			// edge cases, like '��'
+		}
+	}
+
+	free(infix_start);
+	return postfix;
+}
+
+int main() {
+	printf("%s\n", infix_to_postfix("(1+2)*3)/4+5");
+	//printf("%s\n", infix_to_postfix(ask("")));
+	//printf("%s\n", infix_to_postfix(ask("")));
+}

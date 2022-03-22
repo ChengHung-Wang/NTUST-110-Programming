@@ -1,0 +1,62 @@
+#pragma warning(disable : 4996)
+#pragma warning(disable : 6031)
+#include <stdio.h>
+#include <stdlib.h>
+int compare(const void* a[], const void* b[])
+{
+	return (*(float*)a - *(float*)b);
+}
+int indexOf(const float find, float *string, int length) {
+	for (int index = 0; index < length; index++) {
+		if (*string == find) {
+			return index;
+		}
+		string++;
+	}
+	return -1;
+}
+int main()
+{
+	int limit;
+	float data[10][3];
+	// 0 => all plus
+	// 1 => x
+	// 2 => y
+	scanf("%d", &limit);
+	for (int index = limit - 1; index >= 0; index--) {
+		float first, second;
+		scanf("%f %f", &first, &second);
+		data[index][0] = first + second;
+		data[index][1] = first;
+		data[index][2] = second;
+	}
+	
+	qsort(data, limit, sizeof(float), compare);
+
+	for (int index = 0; index < limit; index++) {
+		printf("%.2f %.2f\n", data[index][1], data[index][2]);
+	}
+
+    return 0;
+}
+
+/*
+5
+1.2 3.7
+5.98 7.75
+10.13 7.75
+-7.51 -3.7
+1.2 -6.23
+
+
+- 7.51 - 3.70
+1.20 - 6.23
+1.20 3.70
+5.98 7.75
+10.13 7.75
+
+
+3
+5 2
+2 5
+*/

@@ -1,0 +1,11 @@
+# General
+.DS_Store
+._.DS_Store
+.AppleDouble
+.LSOverride
+/.idea
+
+.vs
+.vscode
+x64
+._*

@@ -1,0 +1,52 @@
+#include "mpfr.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* get() {
+	char c, * input = (char*)malloc(sizeof(*input));
+	size_t index = 0;
+	while ((c = getchar()) != EOF && c != '\n') {
+		input = (char*)realloc(input, index + 1);
+		input[index++] = c;
+	}
+	input[index] = '\0';
+	return input;
+}
+
+int main() {
+	const int lines = strtol(get(), NULL, 10);
+	for (int i = 0; i < lines; i++) {
+		char* input = get();
+		char* original_input = strdup(input);
+		char* x_str = strtok(input, "+-");
+		char* y_str = strtok(NULL, "+-");
+		char operation = original_input[strlen(x_str)];
+		free(original_input);
+		mpfr_t x, y, ans;
+		mpfr_inits2(1024, x, y, ans, NULL);
+		mpfr_set_str(x, x_str, 10, MPFR_RNDN);
+		mpfr_set_str(y, y_str, 10, MPFR_RNDN);
+		switch (operation) {
+		case '+': mpfr_add(ans, x, y, MPFR_RNDN); break;
+		case '-': mpfr_sub(ans, x, y, MPFR_RNDN); break;
+		}
+		mpfr_printf("%.30Rg\n", ans);
+	}
+}
+
+/*
+5
+12345678991019231124+1234567890000000
+12345678991019231124-1234567890000000
+1-123456789123456789
+123465789.123456789+987654321.987654321
+1000000000-0.1
+
+12346913558909231124
+2344444423129231124
+-123456789123456788
+1111120111.11111111
+999999999.9
+
+*/
