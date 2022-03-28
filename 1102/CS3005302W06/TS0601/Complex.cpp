@@ -1,4 +1,9 @@
+// Name: 王正宏
+// Date: March 28, 2022
+// Last Update: March 13, 2022
+// Problem statement: Complex
 #include <iostream>
+#include <complex>
 #include <math.h>
 #include <string>
 #include <sstream>
@@ -46,57 +51,77 @@ double norm(Complex c) {
 
 Complex Complex::operator+(Complex c) {
 	Complex result;
-	result.realValue = realValue + c.realValue;
-	result.imaginaryValue = imaginaryValue + c.imaginaryValue;
+	complex<double> calc(realValue, imaginaryValue);
+	complex<double> calc2(c.realValue, c.imaginaryValue);
+	calc += calc2;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
 Complex Complex::operator-(Complex c) {
 	Complex result;
-	result.realValue = realValue - c.realValue;
-	result.imaginaryValue = imaginaryValue - c.imaginaryValue;
+	complex<double> calc(realValue, imaginaryValue);
+	complex<double> calc2(c.realValue, c.imaginaryValue);
+	calc -= calc2;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
 Complex Complex::operator*(Complex c) {
 	Complex result;
-	result.realValue = realValue * c.realValue;
-	result.imaginaryValue = imaginaryValue * c.imaginaryValue;
+	complex<double> calc(realValue, imaginaryValue);
+	complex<double> calc2(c.realValue, c.imaginaryValue);
+	calc *= calc2;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
 Complex Complex::operator/(Complex c) {
 	Complex result;
-	result.realValue = realValue / c.realValue;
-	result.imaginaryValue = imaginaryValue / c.imaginaryValue;
+	complex<double> calc(realValue, imaginaryValue);
+	complex<double> calc2(c.realValue, c.imaginaryValue);
+	calc /= calc2;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
 Complex operator+(double d, Complex c) {
 	Complex result;
-	result.realValue = d + c.realValue;
-	result.imaginaryValue = d + c.imaginaryValue;
+	complex<double> calc(c.realValue, c.imaginaryValue);
+	calc = d + calc;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
 Complex operator-(double d, Complex c) {
 	Complex result;
-	result.realValue = d - c.realValue;
-	result.imaginaryValue = d - c.imaginaryValue;
+	complex<double> calc(c.realValue, c.imaginaryValue);
+	calc = d - calc;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
 Complex operator*(double d, Complex c) {
 	Complex result;
-	result.realValue = d * c.realValue;
-	result.imaginaryValue = d * c.imaginaryValue;
+	complex<double> calc(c.realValue, c.imaginaryValue);
+	calc = d * calc;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
 Complex operator/(double d, Complex c) {
 	Complex result;
-	result.realValue = d / c.realValue;
-	result.imaginaryValue = d / c.imaginaryValue;
+	complex<double> calc(c.realValue, c.imaginaryValue);
+	calc = d / calc;
+	result.realValue = calc.real();
+	result.imaginaryValue = calc.imag();
 	return result;
 }
 
@@ -106,30 +131,31 @@ bool operator==(Complex c1, Complex c2) {
 
 ostream& operator<<(ostream& strm, const Complex& c) {
 	// “realValue + imaginaryValue*i"
-	strm << c.realValue << " + " << c.imaginaryValue << "*i" << endl;
+	strm << c.realValue << " + " << c.imaginaryValue << "*i";
 	return strm;
 }
 istream& operator>>(istream& strm, Complex& c) {
 	string input;
-	strm >> input;
-	istringstream iss(input);
 	vector<double> lists;
-	vector<char> authList = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-', '*', 'i'};
-	string buffer;
-	while (iss >> buffer) {
-		bool auth = true;
-		string thisNum = "";
-		for (int index = buffer.length() - 1; index <= 0; index ++) {
-			if (find(authList.begin(), authList.end(), buffer[index]) == authList.end()) {
-				auth = false;
-			}else if (buffer[index] != '*' || buffer[index] != 'i') {
-				thisNum = thisNum + buffer[index];
+	vector<char> authList = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-', '*', 'i' };
+
+	for (int index = 0; index < 5; index++) {
+		strm >> input;
+		if (index == 2 || index == 4) {
+			bool auth = true;
+			string thisNum = "";
+
+			for (int index2 = input.length() - 1; index2 >= 0; index2--) {
+				if (find(authList.begin(), authList.end(), input[index2]) == authList.end()) {
+					auth = false;
+				}
+				else if (input[index2] != '*' && input[index2] != 'i') {
+					thisNum = thisNum + input[index2];
+				}
 			}
-		}
-		cout << thisNum << endl;
-		if (auth) {
-			
-			lists.push_back(stod(thisNum));
+			if (auth) {
+				lists.push_back(stod(thisNum));
+			}
 		}
 	}
 	
@@ -137,5 +163,6 @@ istream& operator>>(istream& strm, Complex& c) {
 		c.realValue = lists[0];
 		c.imaginaryValue = lists[1];
 	}
+
 	return strm;
 }
