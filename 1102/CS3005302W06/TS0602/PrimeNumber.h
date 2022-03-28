@@ -1,4 +1,7 @@
-
+// Name: ¤ý¥¿§»
+// Date: March 28, 2022
+// Last Update: March 13, 2022
+// Problem statement: Prime Number
 class PrimeNumber {
 public:
 	int value;
@@ -9,5 +12,4 @@ public:
 	PrimeNumber operator++(int);
 	PrimeNumber & operator--();
 	PrimeNumber operator--(int);
-
 };

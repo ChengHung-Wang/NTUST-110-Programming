@@ -1,3 +1,7 @@
+// Name: ¤ý¥¿§»
+// Date: March 28, 2022
+// Last Update: March 13, 2022
+// Problem statement: Number Game
 #include <iostream>
 #include "NumberGame.h"
 using namespace std;
@@ -16,5 +20,4 @@ int main() {
 	Game.SetFileName("number.txt");
 	Game.LoadNumberList();
 	Game.PrintAllValid();
-	system("pause");
 }

@@ -1,3 +1,7 @@
+// Name: ¤ý¥¿§»
+// Date: March 28, 2022
+// Last Update: March 13, 2022
+// Problem statement: Prime Number
 #include "PrimeNumber.h"
 #include <iostream>
 
@@ -12,6 +16,5 @@ int main()
 	cout << p1.get() << endl;
 	cout << b.get() << endl;
 	cout << p2.get() << endl;
-	system("pause");
 	return 0;
 }
