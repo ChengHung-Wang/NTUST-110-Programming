@@ -2,68 +2,69 @@
 // Date: April 05, 2022
 // Last Update: March 13, 2022
 // Problem statement: Seven-segment Display
+
 #include <iostream>
 #include <string>
-#include <ctype.h>
+#include <vector>
+#include <map>
 
 using namespace std;
 
-void charsegmentdisplay(char[], int);
-
-const bool segment[10][9][3] = {
-	{{1,1,1},{1,0,1},{1,1,1}},//0
-	{{1,0,1},{0,0,1},{0,0,1}},//1
-	{{1,1,1},{0,1,1},{1,1,0}},//2
-	{{1,1,1},{0,1,1},{0,1,1}},//3
-	{{1,0,1},{1,1,1},{0,0,1}},//4
-	{{1,1,1},{1,1,0},{0,1,1}},//5
-	{{1,1,1},{1,1,0},{1,1,1}},//6
-	{{1,1,1},{0,0,1},{0,0,1}},//7
-	{{1,1,1},{1,1,1},{1,1,1}},//8
-	{{1,1,1},{1,1,1},{0,1,1}} //9
+vector<string> digitPoints = {
+		"135678", // 0
+		"58", // 1
+		"15467", // 2
+		"15487", // 3
+		"3458", // 4
+		"13487", // 5
+		"136784", // 6
+		"158", // 7
+		"1345678", // 8
+		"134578"// 9
 };
-
-const char display[3][3] = {
-  {' ','_',' '},
-  {'|','_','|'},
-  {'|','_','|'} 
+char digitStyle[3][3] = {
+	//0    1	2
+	{' ', '_', ' '},
+	//3	   4    5
+	{'|', '_', '|'},
+	//6    7    8
+	{'|', '_', '|'}
 };
+// _ 
+//|_|
+//|_|
 
 int main() {
 	string input;
-	while (getline(cin, input)) {
-		for (int i = 0; i < input.length(); i++) {
-			if (!isdigit(input[i])) {
-				input.erase(input.begin() + i);
-				i--;
+	while (cin >> input) {
+		map<int, vector<string>> result;
+		result[0] = {};
+		result[1] = {};
+		result[2] = {};
+		for (char& item : input) {
+			char digitTemp[3][3] = {
+				{' ', ' ', ' '},
+				{' ', ' ', ' '},
+				{' ', ' ', ' '}
+			};
+			int thisDigit = item - '0';
+			for (char& point : digitPoints[thisDigit]) {
+					digitTemp[(int)(point - '0') / 3][(int)point % 3] = 
+						digitStyle[(int)(point - '0') / 3][(int)point % 3];
 			}
-		}
-		for (int i = 0; i < 3; i++) {
-			for (int g = 0; g < input.length(); g++) {
-				for (int j = 0; j < 3; j++) {
-					printf("%c", segment[input[g] - '0'][i][j] ? display[i][j] : ' ');
+			for (int row = 0; row < 3; row++) {
+				string strTemp = "";
+				for (int col = 0; col < 3; col++) {
+					strTemp += digitTemp[row][col];
 				}
+				result[row].push_back(strTemp);
 			}
-			printf("\n");
 		}
-	}
-	return 0;
-}
-
-
-void charsegmentdisplay(char a[], int q) {
-	int i, j, g, m;
-	int k[100], h = -1;
-	for (m = 0; m <= q; m++) {
-		k[m] = a[m] - '0';
-	}
-	for (i = 0; i < 3; i++) {
-		for (g = 0; g <= q; g++) {
-			for (j = 0; j < 3; j++) {
-				printf("%c", segment[k[g]][i][j] ? display[i][j] : ' ');
+		for (int row = 0; row < 3; row++) {
+			for (string& item : result[row]) {
+				cout << item;
 			}
-			printf("%s", k[g + 1] != 1 && g < q ? " " : "");
+			cout << endl;
 		}
-		printf("\n");
 	}
 }

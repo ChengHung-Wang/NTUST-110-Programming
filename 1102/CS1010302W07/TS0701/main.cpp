@@ -9,5 +9,6 @@ int main()
 	form1.SetFileName("words.txt"); // set file name
 	form1.Load_CompareWord(); // read-in data and compare
 	form1.PrintFoundWords(); // print answers
+	system("pause");
 	return 0;
 }

@@ -1,55 +1,55 @@
-// Name: ¤ý¥¿§»
-// Date: April 05, 2022
-// Last Update: March 13, 2022
-// Problem statement: Cow calculation
 #include <iostream>
+#include <vector>
+#include <map>
 #include <string>
-#include <cmath>
-#include <algorithm>
 
 using namespace std;
-
-int to_number(string);
-
+int toNumber(string);
 int main() {
-	int case_num;
-	cin >> case_num;
-	cin.ignore();
-	cout << "COWCULATIONS OUTPUT" << endl;
-	for (int i = 0; i < case_num; i++) {
-		string input1;
-		string input2;
-		string result;
-		int total = 0;
-		cin >> input1 >> input2;
-		int num1 = to_number(input1), num2 = to_number(input2);
-		cin.ignore();
-		for (int j = 0; j < 3; j++) {
-			char op;
-			cin >> op;
-			switch (op) {
-			case'A':num2 = num1 + num2; break;
-			case'R':num2 /= 4; break;
-			case'L':num2 *= 4; break;
-			case'N':break;
+	char a[] = "123123";
+	string result = string(15 - strlen(a), '0').append(a);
+	cout << result << endl;
+	int limit;
+	while (cin >> limit) {
+		cout << "COWCULATIONS OUTPUT" << endl;
+		for (int round = 0; round < limit; limit++) {
+			string num1, num2;
+			cin >> num1 >> num2;
+			int intNum1 = toNumber(num1);
+			int intNum2 = toNumber(num2);
+			
+			for (int i = 0; i < 3; i++) {
+				char method;
+				cin >> method;
+				if (method == 'A') {
+					intNum2 = intNum1 + intNum2;
+				}
+				else if (method == 'L') {
+					intNum2 *= 4;
+				}
+				else if (method == 'R') {
+		 			intNum2 /= 4;
+				}
 			}
+			string result;
+			cin >> result;
+			int resultInt = toNumber(result);
+			cout << ((resultInt == intNum2) ? "YES" : "NO") << endl;
 		}
-		cin >> result;
-		cout << ((to_number(result) == num2) ? "YES" : "NO") << endl;
+		cout << "END OF OUTPUT" << endl;
 	}
-	cout << "END OF OUTPUT" << endl;
 	return 0;
 }
 
-int to_number(string a) {
+int toNumber(string input) {
 	int result = 0;
-	for (int i = 0; i < a.length(); i++) {
-		switch (a[i]) {
-		case'V': result = result * 4 + 0; break;
-		case'U': result = result * 4 + 1; break;
-		case'C': result = result * 4 + 2; break;
-		case'D': result = result * 4 + 3; break;
-		}
+	map<char, int> addConfig;
+	addConfig['V'] = 0;
+	addConfig['U'] = 1;
+	addConfig['C'] = 2;
+	addConfig['D'] = 3;
+	for (char& item : input) {
+		result = (result * 4) + addConfig[item];
 	}
 	return result;
 }

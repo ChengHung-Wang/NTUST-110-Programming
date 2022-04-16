@@ -1,19 +1,27 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
+#include <ctype.h>
+#include <fstream>
 
 using namespace std;
 
-class Form
-{
-private:
-
+class Word {
 public:
-	string word, name;
-	vector<string> output;
-	void SetInputWord(string inputWord); // set input
-	void ProcessInputWord(); // process input
-	void SetFileName(string fileName); // set file name
-	void Load_CompareWord(); // read-in data and compare
-	void PrintFoundWords(); // print answers
+	string src, lowerStr;
+	map<char, int> usage;
+	Word(string);
+};
+
+class Form {
+public:
+	string fileName, inputWord;
+	vector<Word> words;
+	map<char, int> target;
+	void SetInputWord(string);
+	void ProcessInputWord();
+	void SetFileName(string);
+	void Load_CompareWord();
+	void PrintFoundWords();
 };
