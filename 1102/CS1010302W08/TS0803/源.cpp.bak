@@ -1,0 +1,123 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+bool inRange(int, int, int);
+
+bool inRange(int limit, int position, int length) {
+	return position + length < limit;
+}
+
+int main() {
+	int size, limit;
+	string errMess = "Violation Access.";
+
+	cin >> size >> limit;
+	vector<unsigned char> data(size, 0);
+    
+	for (int index = 0; index < limit; index++) {
+		string method, dataType;
+		int position;
+		cin >> method >> position >> dataType;
+		if (method == "Get") {
+			if (dataType == "int") {
+				if (!inRange(size, position, 3)) {
+					cout << errMess << endl;
+					continue;
+				}
+				unsigned int result(0);
+				for (int i = 0, base = 1; i < 4; i++, base <<= 8) {
+					result += (unsigned int)data[i + position] * base;
+				}
+				cout << result << '\n';
+			}
+			else if (dataType == "short") {
+				if (!inRange(size, position, 1)) {
+					cout << errMess << endl;
+					continue;
+				}
+				unsigned short result(0);
+				for (int i = 0, base = 1; i < 2; i++, base <<= 8) {
+					result += (unsigned short)data[i + position] * base;
+				}
+				cout << result << '\n';
+			}
+			else if (dataType == "char") {
+				if (!inRange(size, position, 0)) {
+					cout << errMess << endl;
+					continue;
+				}
+				cout << (int)data[position] << endl;
+			}
+			else if (dataType == "String") {
+				if (!inRange(size, position, 0)) {
+					cout << errMess << endl;
+					continue;
+				}
+				for (int index = position; data[index] && index < data.size(); index++) {
+					cout << data[index];
+				}
+				cout << endl;
+			}
+		}
+		else if (method == "Set") {
+			string content;
+			cin >> content;
+			if (dataType == "int") {
+				unsigned int newContent = stoi(content);
+				
+				if (!inRange(size, position, 3)) {
+					cout << errMess << endl;
+				}
+				for (int i = position; newContent; newContent >>= 8, i++)
+				{
+					if (i < size) {
+						data[i] = (char)(newContent & 0xff);
+					}
+				}
+			}
+			else if (dataType == "char") {
+				unsigned int newContent = stoi(content);
+				newContent = newContent > 255 ? 255 : newContent;
+				if (!inRange(size, position, 0)) {
+					cout << errMess << endl;
+				}
+				if (position < size) {
+					data[position] = (char)newContent;
+				}
+			}
+			else if (dataType == "short") {
+				unsigned short newContent;
+				newContent = stoi(content) >= 65535 ? 65535 : stoi(content);
+
+				if (!inRange(size, position, 1)) {
+					cout << errMess << endl;
+				}
+				for (int i = position; newContent; newContent >>= 8, i++)
+				{
+					if (i < size) {
+						data[i] = (char)(newContent & 0xff);
+					}
+				}
+			}
+			else if (dataType == "String") {
+				string newContent;
+				getline(cin, newContent);
+				newContent = content + newContent;
+				if (!inRange(size, position, newContent.size())) {
+					cout << errMess << endl;
+				}
+				int index = 0;
+				for (char& item : newContent) {
+					if (index + position < size) {
+						data[index + position] = item;
+					}
+					index++;
+				}
+			}
+		}
+	}
+	return 0;
+}
