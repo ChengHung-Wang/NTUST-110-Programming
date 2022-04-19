@@ -171,5 +171,11 @@ double evaluate(const Polynomial& polynomial, double num) {
 		result += (scale * polynomial.coefficients[index]);
 		index++;
 	}
+	if (result == 661) {
+		for (auto& item : polynomial.coefficients) {
+			cout << item << " ";
+		}
+		cout << endl;
+	}
 	return result;
 }

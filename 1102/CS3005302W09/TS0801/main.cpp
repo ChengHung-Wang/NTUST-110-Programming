@@ -28,7 +28,7 @@ int main()
 	cout << "value of q(2) is " << evaluate(q, 2) << endl;
 	cout << "value of p(2) is " << evaluate(p, 2) << endl;
 	cout << "value of r(2) is " << evaluate(r, 2) << endl;
-	cout << "value of c(2) is " << evaluate(c, 2) << endl;
+	cout << "value of c(2) is " << evaluate(c, 6) << endl;
 
 	r = q + c;
 	cout << "value of (q + c)(2) is " << evaluate(r, 2) << endl;
