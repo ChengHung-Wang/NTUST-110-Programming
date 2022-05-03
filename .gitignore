@@ -3,9 +3,11 @@
 ._.DS_Store
 .AppleDouble
 .LSOverride
-/.idea
+.idea/
 
 .vs
 .vscode
 x64
 ._*
+*.zip
+~*
