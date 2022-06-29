@@ -1,0 +1,5 @@
+﻿  Source.cpp
+C:\Users\CGLab_JYChen\Desktop\助教\2021SOOP\Dungeon2021S\Week7(Done)\Week07_Practice\Week04_Practice\Source.cpp(144,12): warning C4244: '引數': 將 'time_t' 轉換為 'unsigned int'，由於類型不同，可能導致資料遺失
+C:\Users\CGLab_JYChen\Desktop\助教\2021SOOP\Dungeon2021S\Week7(Done)\Week07_Practice\Week04_Practice\Source.cpp(301,2): error C2065: 'drawBoard': 未宣告的識別項
+C:\Users\CGLab_JYChen\Desktop\助教\2021SOOP\Dungeon2021S\Week7(Done)\Week07_Practice\Week04_Practice\Source.cpp(304,2): error C2065: 'drawBoard': 未宣告的識別項
+C:\Users\CGLab_JYChen\Desktop\助教\2021SOOP\Dungeon2021S\Week7(Done)\Week07_Practice\Week04_Practice\Source.cpp(323,17): error C2065: 'drawBoard': 未宣告的識別項
